@@ -1,0 +1,85 @@
+package com.example.demo.models;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "usuario")
+public class Usuario {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idUsuario;
+
+    private String nome;
+
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    private String senha;
+
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+
+    private Double saldoHoras;
+
+    private Double avaliacaoMedia;
+
+    public Usuario() {
+    }
+
+    public Integer getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(Integer idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public Double getSaldoHoras() {
+        return saldoHoras;
+    }
+
+    public void setSaldoHoras(Double saldoHoras) {
+        this.saldoHoras = saldoHoras;
+    }
+
+    public Double getAvaliacaoMedia() {
+        return avaliacaoMedia;
+    }
+
+    public void setAvaliacaoMedia(Double avaliacaoMedia) {
+        this.avaliacaoMedia = avaliacaoMedia;
+    }
+}
