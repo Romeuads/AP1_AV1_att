@@ -54,19 +54,40 @@ public class ServicoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+        
     // PUT /servico/{id}
     @PutMapping("/{id}")
     public ResponseEntity<Void> atualizar(
             @PathVariable Integer id,
             @RequestBody Servico servico) {
 
-        if (servicoService.buscarPorId(id).isEmpty()) {
+        var servicoExistente = servicoService.buscarPorId(id);
+
+        if (servicoExistente.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        servico.setIdServico(id);
+        Servico existente = servicoExistente.get();
 
-        servicoService.salvar(servico);
+        if (servico.getTitulo() != null) {
+            existente.setTitulo(servico.getTitulo());
+        }
+
+        if (servico.getDescricao() != null) {
+            existente.setDescricao(servico.getDescricao());
+        }
+
+        if (servico.getHorasEstimadas() != null) {
+            existente.setHorasEstimadas(servico.getHorasEstimadas());
+        }
+
+        if (servico.getStatus() != null) {
+            existente.setStatus(servico.getStatus());
+        }
+
+        // Mantém o usuário já associado ao serviço
+
+        servicoService.salvar(existente);
 
         return ResponseEntity.noContent().build();
     }

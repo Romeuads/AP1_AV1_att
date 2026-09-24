@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuario")
@@ -55,16 +56,42 @@ public class UsuarioController {
             @PathVariable Integer id,
             @RequestBody Usuario usuario) {
 
-        if (usuarioService.buscarPorId(id).isEmpty()) {
+        Optional<Usuario> usuarioExistente = usuarioService.buscarPorId(id);
+
+        if (usuarioExistente.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        usuario.setIdUsuario(id);
-        usuarioService.salvar(usuario);
+        Usuario existente = usuarioExistente.get();
+
+        if (usuario.getNome() != null) {
+            existente.setNome(usuario.getNome());
+        }
+
+        if (usuario.getEmail() != null) {
+            existente.setEmail(usuario.getEmail());
+        }
+
+        if (usuario.getSenha() != null) {
+            existente.setSenha(usuario.getSenha());
+        }
+
+        if (usuario.getBio() != null) {
+            existente.setBio(usuario.getBio());
+        }
+
+        if (usuario.getSaldoHoras() != null) {
+            existente.setSaldoHoras(usuario.getSaldoHoras());
+        }
+
+        if (usuario.getAvaliacaoMedia() != null) {
+            existente.setAvaliacaoMedia(usuario.getAvaliacaoMedia());
+        }
+
+        usuarioService.salvar(existente);
 
         return ResponseEntity.noContent().build();
     }
-
     // DELETE /usuario/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(

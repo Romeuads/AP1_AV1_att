@@ -63,18 +63,36 @@ public class AgendamentoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+       
     // PUT /agendamento/{id}
     @PutMapping("/{id}")
     public ResponseEntity<Void> atualizar(
             @PathVariable Integer id,
             @RequestBody Agendamento agendamento) {
 
-        if (agendamentoService.buscarPorId(id).isEmpty()) {
+        var agendamentoExistente = agendamentoService.buscarPorId(id);
+
+        if (agendamentoExistente.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        agendamento.setIdAgendamento(id);
-        agendamentoService.salvar(agendamento);
+        Agendamento existente = agendamentoExistente.get();
+
+        if (agendamento.getDataSolicitacao() != null) {
+            existente.setDataSolicitacao(agendamento.getDataSolicitacao());
+        }
+
+        if (agendamento.getStatus() != null) {
+            existente.setStatus(agendamento.getStatus());
+        }
+
+        if (agendamento.getDataFinalizacao() != null) {
+            existente.setDataFinalizacao(agendamento.getDataFinalizacao());
+        }
+
+        // Mantém servico, usuarioPrestador e usuarioSolicitante
+
+        agendamentoService.salvar(existente);
 
         return ResponseEntity.noContent().build();
     }

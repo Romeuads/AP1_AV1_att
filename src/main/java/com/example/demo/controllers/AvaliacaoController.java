@@ -35,17 +35,34 @@ public class AvaliacaoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+       
     @PutMapping("/{id}")
     public ResponseEntity<Void> atualizar(
             @PathVariable Integer id,
             @RequestBody Avaliacao avaliacao) {
 
-        if (avaliacaoService.buscarPorId(id).isEmpty()) {
+        var avaliacaoExistente = avaliacaoService.buscarPorId(id);
+
+        if (avaliacaoExistente.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        avaliacao.setIdAvaliacao(id);
-        avaliacaoService.salvar(avaliacao);
+        Avaliacao existente = avaliacaoExistente.get();
+
+        if (avaliacao.getNota() != null) {
+            existente.setNota(avaliacao.getNota());
+        }
+
+        if (avaliacao.getComentario() != null) {
+            existente.setComentario(avaliacao.getComentario());
+        }
+
+        if (avaliacao.getData() != null) {
+            existente.setData(avaliacao.getData());
+        }
+
+        // Mantém agendamento, avaliador e avaliado
+        avaliacaoService.salvar(existente);
 
         return ResponseEntity.noContent().build();
     }

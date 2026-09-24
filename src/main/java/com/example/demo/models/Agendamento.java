@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
+
 @Entity
 @Table(name = "agendamento")
 public class Agendamento {
@@ -31,6 +35,7 @@ public class Agendamento {
     private Usuario usuarioSolicitante;
 
     @OneToOne(mappedBy = "agendamento")
+    @JsonIgnore
     private Avaliacao avaliacao;
 
     public Agendamento() {
