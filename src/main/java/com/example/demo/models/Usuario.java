@@ -1,10 +1,27 @@
 package com.example.demo.models;
 
+import com.example.demo.enums.ProfileEnum;
+
+import java.util.HashSet;
+import java.util.Set;
 import jakarta.persistence.*;
+
 
 @Entity
 @Table(name = "usuario")
 public class Usuario {
+
+
+    
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(
+        name = "user_profiles",
+        joinColumns = @JoinColumn(name = "user_id")
+    )
+    @Column(name = "profile")
+    private Set<ProfileEnum> profiles = new HashSet<>();
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +42,8 @@ public class Usuario {
     private Double avaliacaoMedia;
 
     public Usuario() {
+        this.profiles = new HashSet<>();
+        this.profiles.add(ProfileEnum.USER);
     }
 
     public Integer getIdUsuario() {
@@ -82,4 +101,13 @@ public class Usuario {
     public void setAvaliacaoMedia(Double avaliacaoMedia) {
         this.avaliacaoMedia = avaliacaoMedia;
     }
+
+    public Set<ProfileEnum> getProfiles() {
+        return profiles;
+    }
+
+    public void setProfiles(Set<ProfileEnum> profiles) {
+        this.profiles = profiles;
+    }
+
 }
