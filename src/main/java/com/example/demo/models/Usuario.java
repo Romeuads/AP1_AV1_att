@@ -1,6 +1,7 @@
 package com.example.demo.models;
 
 import com.example.demo.enums.ProfileEnum;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +33,7 @@ public class Usuario {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String senha;
 
     @Column(columnDefinition = "TEXT")

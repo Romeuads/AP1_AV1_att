@@ -1,4 +1,3 @@
-
 package com.example.demo.services;
 
 import com.example.demo.enums.ProfileEnum;
@@ -27,30 +26,43 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Usuario salvar(Usuario usuario) {
-
-        if (usuario.getIdUsuario() == null) {
-
-            // Criptografa a senha no cadastro
-            usuario.setSenha(
-                passwordEncoder.encode(usuario.getSenha())
-            );
-
-            // Define o perfil padrão
-            usuario.setProfiles(
-                new HashSet<>(Set.of(ProfileEnum.USER))
-            );
-
-        } else if (usuario.getSenha() != null
-                && !usuario.getSenha().isBlank()) {
-
-            // Criptografa uma nova senha informada
-            usuario.setSenha(
-                passwordEncoder.encode(usuario.getSenha())
-            );
-        }
+    public Usuario criar(Usuario usuario) {
+        usuario.setIdUsuario(null);
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+        usuario.setProfiles(new HashSet<>(Set.of(ProfileEnum.USER)));
 
         return usuarioRepository.save(usuario);
+    }
+
+    public Optional<Usuario> atualizar(Integer id, Usuario dados) {
+        return usuarioRepository.findById(id).map(existente -> {
+
+            if (dados.getNome() != null) {
+                existente.setNome(dados.getNome());
+            }
+
+            if (dados.getEmail() != null) {
+                existente.setEmail(dados.getEmail());
+            }
+
+            if (dados.getSenha() != null && !dados.getSenha().isBlank()) {
+                existente.setSenha(passwordEncoder.encode(dados.getSenha()));
+            }
+
+            if (dados.getBio() != null) {
+                existente.setBio(dados.getBio());
+            }
+
+            if (dados.getSaldoHoras() != null) {
+                existente.setSaldoHoras(dados.getSaldoHoras());
+            }
+
+            if (dados.getAvaliacaoMedia() != null) {
+                existente.setAvaliacaoMedia(dados.getAvaliacaoMedia());
+            }
+
+            return usuarioRepository.save(existente);
+        });
     }
 
     public List<Usuario> listarTodos() {
